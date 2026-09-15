@@ -33,7 +33,8 @@ jobs:
         env:
           fromImage: ${{ inputs.from }}
           toImage: ${{ inputs.to }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |-
           alias skopeo='nix run --inputs-from github:LCOGT/devenv-k8s/v1 nixpkgs#skopeo --'
-          echo "${{ secrets.GITHUB_TOKEN }}" | skopeo login --username "${{ github.actor }}" ghcr.io
+          echo "$GITHUB_TOKEN" | skopeo login --username "${{ github.actor }}" ghcr.io
           skopeo copy --all "docker://$fromImage" "docker://ghcr.io/${GITHUB_REPOSITORY,,}/$toImage"
