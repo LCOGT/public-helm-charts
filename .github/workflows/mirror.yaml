@@ -32,4 +32,4 @@ jobs:
           toImage: ${{ inputs.to }}
         run: |-
           echo "$GITHUB_TOKEN" | oras login ghcr.io --username ${{ github.actor }} --password-stdin
-          oras cp -r "$fromImage" "$toImage"
+          oras cp -r "$fromImage" "ghcr.io/${GITHUB_REPOSITORY,,}/$toImage"
