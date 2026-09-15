@@ -22,19 +22,14 @@ jobs:
       packages: write
 
     steps:
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
+      - name: Install oras
+        uses: oras-project/setup-oras@v1
+        
       - name: Mirror
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           fromImage: ${{ inputs.from }}
           toImage: ${{ inputs.to }}
         run: |-
-          docker buildx imagetools create --tag "ghcr.io/${GITHUB_REPOSITORY,,}/$toImage" "$fromImage"
+          oras login ghcr.io --username ${{ github.actor }} --password-stdin
+          oras cp -r "$fromImage" "$toImage"
