@@ -31,5 +31,5 @@ jobs:
           fromImage: ${{ inputs.from }}
           toImage: ${{ inputs.to }}
         run: |-
-          oras login ghcr.io --username ${{ github.actor }} --password-stdin
+          echo "$GITHUB_TOKEN" | oras login ghcr.io --username ${{ github.actor }} --password-stdin
           oras cp -r "$fromImage" "$toImage"
